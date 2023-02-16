@@ -1,3 +1,4 @@
+using API.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -7,20 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // services are used to add functionality to the application and are added to the IServiceCollection that is passed to the Configure method. 
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<DataContext>(opt => 
-{
-    opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")); // this is the connection string to the database (DefaultConnection)
-});
-builder.Services.AddCors(opt => 
-{
-    opt.AddPolicy("CorsPolicy", policy => 
-    {
-        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000"); // this is the policy that is used to allow requests from the client
-    });
-});
+builder.Services.AddApplicationServices(builder.Configuration); // this is the application service that is used to add the application services to the application
 
 var app = builder.Build();
 
