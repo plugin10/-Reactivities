@@ -6,7 +6,7 @@ namespace Persistence
     {
         public static async Task SeedData(DataContext context)
         {
-            if (context.Activities.Any()) return;
+            if (context.Activities.Any()) return; // if there are any activities in the database, return
             
             var activities = new List<Activity>
             {

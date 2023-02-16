@@ -10,9 +10,16 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<DataContext>(opt =>
+builder.Services.AddDbContext<DataContext>(opt => 
 {
-    opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+    opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")); // this is the connection string to the database (DefaultConnection)
+});
+builder.Services.AddCors(opt => 
+{
+    opt.AddPolicy("CorsPolicy", policy => 
+    {
+        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000"); // this is the policy that is used to allow requests from the client
+    });
 });
 
 var app = builder.Build();
@@ -25,12 +32,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseAuthorization();
+app.UseCors("CorsPolicy"); // this is the cors middleware that is used to allow requests from the client
 
-app.MapControllers();
+app.UseAuthorization(); // this is the authorization middleware that is used to authorize requests
 
-using var scoper = app.Services.CreateScope();
-var services = scoper.ServiceProvider;
+app.MapControllers(); // this is the routing middleware that is used to route requests to the appropriate controller
+ 
+using var scoper = app.Services.CreateScope(); // this is the service scope that is used to create a scope for the services that are used in the application
+var services = scoper.ServiceProvider; // this is the service provider that is used to get the services that are used in the application
 
 try{
     var context = services.GetRequiredService<DataContext>();

@@ -1,9 +1,9 @@
 namespace Domain
 {
-    public class Activity
+    public class Activity // this is the class that will be used to create the table in the database
     {
-        public Guid Id { get; set; }
-        public string Title { get; set; }
+        public Guid Id { get; set; } // this is the primary key
+        public string Title { get; set; } 
         public DateTime Date { get; set; }
         public string Description { get; set; }
         public string Category { get; set; }
